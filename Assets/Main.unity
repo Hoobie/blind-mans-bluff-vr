@@ -84,7 +84,7 @@ NavMeshSettings:
     minRegionArea: 2
     cellSize: 0.16666667
     manualCellSize: 0
-  m_NavMeshData: {fileID: 23800000, guid: 883f6a9d630a9ac488f36db4b213a29f, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: a54225bca1ddd0549a7b035ba6c65ca4, type: 2}
 --- !u!1 &14788229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1363,10 +1363,6 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 2}
   m_PrefabInternal: {fileID: 463764871}
---- !u!4 &1401801586 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 452668, guid: aa62de34ca990194fb8fd7db4fb259cc, type: 2}
-  m_PrefabInternal: {fileID: 609477751}
 --- !u!1 &1342516014
 GameObject:
   m_ObjectHideFlags: 0
@@ -1428,6 +1424,10 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 14
+--- !u!4 &1401801586 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 452668, guid: aa62de34ca990194fb8fd7db4fb259cc, type: 2}
+  m_PrefabInternal: {fileID: 609477751}
 --- !u!4 &1450279187 stripped
 Transform:
   m_PrefabParentObject: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 2}
