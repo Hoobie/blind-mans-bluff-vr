@@ -9,7 +9,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
     {
         public NavMeshAgent agent { get; private set; }             // the navmesh agent required for the path finding
         public ThirdPersonCharacter character { get; private set; } // the character we are controlling
-        public Transform target;                                    // target to aim for
+        public Transform target;     
+		public System.Random r;
 
 
         private void Start()
@@ -20,7 +21,23 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 	        agent.updateRotation = false;
 	        agent.updatePosition = true;
+
+			r = new System.Random (Guid.NewGuid().GetHashCode());
+			InvokeRepeating ("ChangeTarget", 0.0f, 1f);
         }
+
+		private void ChangeTarget() {
+			double nextDouble = r.NextDouble ();
+
+			if (nextDouble < 0.25) 
+				this.target = GameObject.Find ("Tree").transform;
+			else if (nextDouble < 0.5)
+				this.target = GameObject.Find ("Tree (1)").transform;
+			else if (nextDouble < 0.75)
+				this.target = GameObject.Find ("Tree (2)").transform;
+			else
+				this.target = GameObject.Find ("Tree (3)").transform;
+		}
 
 
         private void Update()
@@ -32,6 +49,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 character.Move(agent.desiredVelocity, false, false);
             else
                 character.Move(Vector3.zero, false, false);
+			
         }
 
 
