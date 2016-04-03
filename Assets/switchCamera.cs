@@ -11,16 +11,19 @@ public class switchCamera : MonoBehaviour {
 		currentCameraIndex = 0;
 
 		//Turn all cameras off, except the first default one
-		for (int i=1; i<cameras.Length; i++) 
+		for (int i=0; i<cameras.Length; i++) 
 		{
-			cameras[i].gameObject.SetActive(false);
+			if (cameras [i].name == "PlayerCamera") {
+				currentCameraIndex = i;
+			}
+			cameras [i].gameObject.SetActive (false);
 		}
 
-		//If any cameras were added to the controller, enable the first one
+		//Enable the player camera
 		if (cameras.Length>0)
 		{
-			cameras [0].gameObject.SetActive (true);
-			Debug.Log ("Camera with name: " + cameras [0].GetComponent<Camera>().name + ", is now enabled");
+			cameras [currentCameraIndex].gameObject.SetActive (true);
+			Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera>().name + ", is now enabled");
 		}
 	}
 
@@ -31,7 +34,7 @@ public class switchCamera : MonoBehaviour {
 		//When we reach the end of the camera array, move back to the beginning or the array.
 		if (Input.GetKeyDown(KeyCode.V))
 		{
-			currentCameraIndex ++;
+			currentCameraIndex++;
 			Debug.Log ("V button has been pressed. Switching to the next camera");
 			if (currentCameraIndex < cameras.Length)
 			{
