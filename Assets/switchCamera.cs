@@ -29,7 +29,8 @@ public class switchCamera : MonoBehaviour {
 		//If the v button is pressed, switch to the next camera
 		//Set the camera at the current index to inactive, and set the next one in the array to active
 		//When we reach the end of the camera array, move back to the beginning or the array.
-		if (Input.GetKeyDown(KeyCode.V))
+		if((Input.touchCount == 0 && Input.GetKeyDown(KeyCode.V)) || 
+			(Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began))
 		{
 			currentCameraIndex ++;
 			Debug.Log ("V button has been pressed. Switching to the next camera");
