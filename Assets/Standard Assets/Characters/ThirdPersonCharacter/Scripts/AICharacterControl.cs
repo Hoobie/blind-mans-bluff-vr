@@ -11,19 +11,23 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public ThirdPersonCharacter character { get; private set; } // the character we are controlling
         public Transform target;     
 		public System.Random r;
-
+		public Transform player;
+		public Transform myTransform;
 
         private void Start()
         {
             // get the components on the object we need ( should not be null due to require component so no need to check )
             agent = GetComponentInChildren<NavMeshAgent>();
-            character = GetComponent<ThirdPersonCharacter>();
+			character = GetComponent<ThirdPersonCharacter>();
+			myTransform = character.transform;
 
 	        agent.updateRotation = false;
 	        agent.updatePosition = true;
 
 			r = new System.Random (Guid.NewGuid().GetHashCode());
 			InvokeRepeating ("ChangeTarget", 0.0f, 1f);
+
+			player = GameObject.FindWithTag ("Player").transform;
         }
 
 		private void ChangeTarget() {
@@ -49,7 +53,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 character.Move(agent.desiredVelocity, false, false);
             else
                 character.Move(Vector3.zero, false, false);
-			
+
+			myTransform.LookAt (player);
         }
 
 
