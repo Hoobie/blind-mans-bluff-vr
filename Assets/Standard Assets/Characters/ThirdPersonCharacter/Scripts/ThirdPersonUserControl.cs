@@ -52,7 +52,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			v = CrossPlatformInputManager.GetAxis("Vertical");
 #else
 			h = -Input.acceleration.x;
-			v = Input.acceleration.z;
+			v = -Input.acceleration.z;
 #endif
 			bool crouch = Input.GetKey (KeyCode.C);
 
@@ -72,7 +72,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 #endif
 
 			// pass all parameters to the character control script
-			m_Character.Move (m_Move, crouch, m_Jump);
+			m_Character.Move (m_Move*3f, crouch, m_Jump);
+			m_Character.transform.Rotate(Input.acceleration.x*m_Cam.up);
 			m_Jump = false;
 		}
 	}
