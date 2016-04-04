@@ -73,7 +73,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			// pass all parameters to the character control script
 			m_Character.Move (m_Move*3f, crouch, m_Jump);
-			m_Character.transform.Rotate(Input.acceleration.x*m_Cam.up);
+			m_Character.transform.Rotate(Input.acceleration.x*m_Cam.up*3f);
 			m_Jump = false;
 		}
 	}
