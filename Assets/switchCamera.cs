@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SwitchCamera : MonoBehaviour {
+public class SwitchCamera : MonoBehaviour
+{
 	public Camera[] cameras;
 	private int currentCameraIndex;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		cameras = Camera.allCameras;
 		currentCameraIndex = 0;
 
 		//Turn all cameras off, except the first default one
-		for (int i=0; i<cameras.Length; i++) 
-		{
+		for (int i = 0; i < cameras.Length; i++) {
 			if (cameras [i].name == "PlayerCamera") {
 				currentCameraIndex = i;
 			}
@@ -20,35 +21,31 @@ public class SwitchCamera : MonoBehaviour {
 		}
 
 		//Enable the player camera
-		if (cameras.Length>0)
-		{
+		if (cameras.Length > 0) {
 			cameras [currentCameraIndex].gameObject.SetActive (true);
-			Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera>().name + ", is now enabled");
+			Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera> ().name + ", is now enabled");
 		}
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		//If the v button is pressed, switch to the next camera
 		//Set the camera at the current index to inactive, and set the next one in the array to active
 		//When we reach the end of the camera array, move back to the beginning or the array.
-		if((Input.touchCount == 0 && Input.GetKeyDown(KeyCode.V)) || 
-			(Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began))
-		{
+		if ((Input.touchCount == 0 && Input.GetKeyDown (KeyCode.V)) ||
+		   (Input.touchCount == 1 && Input.GetTouch (0).phase == TouchPhase.Began)) {
 			currentCameraIndex++;
 			Debug.Log ("V button has been pressed. Switching to the next camera");
-			if (currentCameraIndex < cameras.Length)
-			{
-				cameras[currentCameraIndex-1].gameObject.SetActive(false);
-				cameras[currentCameraIndex].gameObject.SetActive(true);
-				Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera>().name + ", is now enabled");
-			}
-			else
-			{
-				cameras[currentCameraIndex-1].gameObject.SetActive(false);
+			if (currentCameraIndex < cameras.Length) {
+				cameras [currentCameraIndex - 1].gameObject.SetActive (false);
+				cameras [currentCameraIndex].gameObject.SetActive (true);
+				Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera> ().name + ", is now enabled");
+			} else {
+				cameras [currentCameraIndex - 1].gameObject.SetActive (false);
 				currentCameraIndex = 0;
-				cameras[currentCameraIndex].gameObject.SetActive(true);
-				Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera>().name + ", is now enabled");
+				cameras [currentCameraIndex].gameObject.SetActive (true);
+				Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera> ().name + ", is now enabled");
 			}
 		}
 	}
