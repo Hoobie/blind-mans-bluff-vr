@@ -84,7 +84,7 @@ NavMeshSettings:
     minRegionArea: 2
     cellSize: 0.16666667
     manualCellSize: 0
-  m_NavMeshData: {fileID: 23800000, guid: a54225bca1ddd0549a7b035ba6c65ca4, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 29f21fc1203fb534691432303875784b, type: 2}
 --- !u!1 &14788229
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +362,7 @@ GameObject:
   - 92: {fileID: 295257677}
   - 81: {fileID: 295257676}
   m_Layer: 0
-  m_Name: Camera (4)
+  m_Name: PlayerCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
