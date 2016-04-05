@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class switchCamera : MonoBehaviour {
+public class SwitchCamera : MonoBehaviour {
 	public Camera[] cameras;
 	private int currentCameraIndex;
 
