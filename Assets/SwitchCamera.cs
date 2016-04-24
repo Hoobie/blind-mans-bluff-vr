@@ -1,27 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SwitchCamera : MonoBehaviour
 {
-	public Camera[] cameras;
+	List<Camera> cameras;
 	private int currentCameraIndex;
 
 	// Use this for initialization
 	void Start ()
 	{
-		cameras = Camera.allCameras;
+		cameras = new List<Camera>(Camera.allCameras);
 		currentCameraIndex = 0;
 
 		//Turn all cameras off, except the first default one
-		for (int i = 0; i < cameras.Length; i++) {
+		for (int i = 0; i < cameras.Capacity; i++) {
 			if (cameras [i].name == "PlayerCamera") {
 				currentCameraIndex = i;
 			}
-			cameras [i].gameObject.SetActive (false);
 		}
 
+		cameras.RemoveAll(item => item.name == "PreRender" || item.name == "PostRender");
+	
 		//Enable the player camera
-		if (cameras.Length > 0) {
+		if (cameras.Capacity > 0) {
 			cameras [currentCameraIndex].gameObject.SetActive (true);
 			Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera> ().name + ", is now enabled");
 		}
@@ -37,7 +39,7 @@ public class SwitchCamera : MonoBehaviour
 		   (Input.touchCount == 1 && Input.GetTouch (0).phase == TouchPhase.Began)) {
 			currentCameraIndex++;
 			Debug.Log ("V button has been pressed. Switching to the next camera");
-			if (currentCameraIndex < cameras.Length) {
+			if (currentCameraIndex < cameras.Capacity) {
 				cameras [currentCameraIndex - 1].gameObject.SetActive (false);
 				cameras [currentCameraIndex].gameObject.SetActive (true);
 				Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera> ().name + ", is now enabled");
