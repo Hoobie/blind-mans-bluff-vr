@@ -55,6 +55,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			move = Vector3.ProjectOnPlane(move, m_GroundNormal);
 			m_TurnAmount = Mathf.Atan2(move.x, move.z);
 			m_ForwardAmount = move.z;
+			if(m_ForwardAmount<0.0) {
+				float turnSpeed;
+				turnSpeed=Input.GetAxis("Horizontal");
+				turnSpeed = Mathf.Clamp(turnSpeed,-1.0F, 1.0F);
+				transform.Rotate(0.0F,  turnSpeed, 0.0F);
+				m_Animator.SetFloat("Turn", turnSpeed);
+
+			}
 
 			//ApplyExtraTurnRotation();
 
