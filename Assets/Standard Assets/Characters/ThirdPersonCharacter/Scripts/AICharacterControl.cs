@@ -12,8 +12,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public ThirdPersonCharacter character { get; private set; }
 		// the character we are controlling
 		public Transform player;
-		public Transform target;
-		public bool hiding = false;
+		public bool hiding { get; set; }
 
 		private void Start ()
 		{
@@ -25,22 +24,23 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			agent.updatePosition = true;
 
 			player = GameObject.FindWithTag ("Player").transform;
+			hiding = false;
 		}
 
 		private void Update ()
 		{
 			character.transform.LookAt (player);
 
-			if (!IsPlayerLooking () && !hiding) {
-				hiding = true;
-				FindClosestWall ();
+			if (IsPlayerLooking () && !hiding) {
+				MoveFromPlayer ();
+			} else {
+				Transform target = FindClosestWall ();
 				agent.SetDestination (target.position);
 				if (agent.remainingDistance > agent.stoppingDistance) {
 					character.Move (agent.desiredVelocity, false, false);
+				} else {
+					hiding = true;
 				}
-			} else {
-				hiding = false;
-				MoveFromPlayer ();
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			return Physics.Raycast (ray, out hit, 100) && hit.transform.tag == "Player";
 		}
 
-		private void FindClosestWall ()
+		private Transform FindClosestWall ()
 		{
 			GameObject[] gos;
 			gos = GameObject.FindGameObjectsWithTag ("Wall");
@@ -66,14 +66,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					distance = curDistance;
 				}
 			}
-			target = closest.transform;
+			return closest.transform;
 		}
 
 		private void MoveFromPlayer ()
 		{
 			Vector3 moveDirection = character.transform.position - player.position;
-			float speed = 0.2f;
-			character.Move (moveDirection.normalized * speed, false, false);
+			character.Move (moveDirection.normalized * 2f, false, false);
 		}
 	}
 }
