@@ -7,39 +7,29 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	[RequireComponent (typeof(ThirdPersonCharacter))]
 	public class AICharacterControl : MonoBehaviour
 	{
-		public NavMeshAgent agent { get; private set; }
-		// the navmesh agent required for the path finding
-		public ThirdPersonCharacter character { get; private set; }
-		// the character we are controlling
-		public Transform player;
-		public bool hiding { get; set; }
+		private ThirdPersonCharacter character;
+		private Transform player;
 
 		private void Start ()
 		{
-			// get the components on the object we need ( should not be null due to require component so no need to check )
-			agent = GetComponentInChildren<NavMeshAgent> ();
 			character = GetComponent<ThirdPersonCharacter> ();
-
-			agent.updateRotation = false;
-			agent.updatePosition = true;
-
 			player = GameObject.FindWithTag ("Player").transform;
-			hiding = false;
 		}
 
 		private void Update ()
 		{
-			character.transform.LookAt (player);
+			character.GetComponentInChildren<Camera> ().transform.LookAt (player);
 
-			if (IsPlayerLooking () && !hiding) {
+			if (IsObjectCloserThan(player, 5f)) {
+				Debug.Log (character.tag + " is running away!");
 				MoveFromPlayer ();
 			} else {
-				Transform target = FindClosestWall ();
-				agent.SetDestination (target.position);
-				if (agent.remainingDistance > agent.stoppingDistance) {
-					character.Move (agent.desiredVelocity, false, false);
+				Debug.Log (character.tag + " is hiding!");
+				Transform wall = FindClosestWall ();
+				if (!IsObjectCloserThan (wall, 3f)) {
+					MoveToObject (wall);
 				} else {
-					hiding = true;
+					character.Move(Vector3.zero, false, false);
 				}
 			}
 		}
@@ -48,7 +38,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			Ray ray = new Ray (transform.position, transform.forward);
 			RaycastHit hit;
-			return Physics.Raycast (ray, out hit, 100) && hit.transform.tag == "Player";
+			return Physics.Raycast (ray, out hit, 10f) && hit.transform.tag == "Player";
+		}
+
+		private bool IsObjectCloserThan (Transform transform, float maxDistance)
+		{
+			float magnitude = (transform.position - character.transform.position).magnitude;
+			return magnitude < maxDistance;
 		}
 
 		private Transform FindClosestWall ()
@@ -71,8 +67,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		private void MoveFromPlayer ()
 		{
-			Vector3 moveDirection = character.transform.position - player.position;
-			character.Move (moveDirection.normalized * 2f, false, false);
+			character.Move (character.transform.position - player.position, false, false);
+		}
+
+		private void MoveToObject (Transform transform)
+		{
+			character.transform.LookAt (transform);
+			character.Move (character.transform.position, false, false);
 		}
 	}
 }
