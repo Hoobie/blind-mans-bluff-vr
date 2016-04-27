@@ -1,32 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class SwitchCamera : MonoBehaviour
 {
-	List<Camera> cameras;
-	private int currentCameraIndex;
+	List<Camera> cameras = new List<Camera>();
+	private int playerCameraIdx, lastIdx = -1;
+	private System.Random r;
+
+	private float CAMERA_CHANGE_TIMEOUT = 4f;
 
 	// Use this for initialization
 	void Start ()
 	{
-		cameras = new List<Camera>(Camera.allCameras);
-		currentCameraIndex = 0;
+		r = new System.Random (GetHashCode ());
+		// Get all cameras
+		foreach (GameObject tmp in GameObject.FindGameObjectsWithTag ("MainCamera"))
+			cameras.Add (tmp.GetComponent<Camera>());
 
-		//Turn all cameras off, except the first default one
-		for (int i = 0; i < cameras.Capacity; i++) {
-			if (cameras [i].name == "PlayerCamera") {
-				currentCameraIndex = i;
-			}
-		}
-
-		cameras.RemoveAll(item => item.name == "PreRender" || item.name == "PostRender");
-	
-		//Enable the player camera
-		if (cameras.Capacity > 0) {
-			cameras [currentCameraIndex].gameObject.SetActive (true);
-			Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera> ().name + ", is now enabled");
-		}
+		// Change camera every CAMERA_CHANGE_TIMEOUT s
+		InvokeRepeating ("ChangeCameraRandomly", 0.0f, CAMERA_CHANGE_TIMEOUT);
 	}
 
 	// Update is called once per frame
@@ -36,19 +30,31 @@ public class SwitchCamera : MonoBehaviour
 		//Set the camera at the current index to inactive, and set the next one in the array to active
 		//When we reach the end of the camera array, move back to the beginning or the array.
 		if ((Input.touchCount == 0 && Input.GetKeyDown (KeyCode.V)) ||
-		   (Input.touchCount == 1 && Input.GetTouch (0).phase == TouchPhase.Began)) {
-			currentCameraIndex++;
-			Debug.Log ("V button has been pressed. Switching to the next camera");
-			if (currentCameraIndex < cameras.Capacity) {
-				cameras [currentCameraIndex - 1].gameObject.SetActive (false);
-				cameras [currentCameraIndex].gameObject.SetActive (true);
-				Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera> ().name + ", is now enabled");
-			} else {
-				cameras [currentCameraIndex - 1].gameObject.SetActive (false);
-				currentCameraIndex = 0;
-				cameras [currentCameraIndex].gameObject.SetActive (true);
-				Debug.Log ("Camera with name: " + cameras [currentCameraIndex].GetComponent<Camera> ().name + ", is now enabled");
-			}
+		    (Input.touchCount == 1 && Input.GetTouch (0).phase == TouchPhase.Began)) {
+			ChangeCameraRandomly ();
 		}
+	}
+
+	void SetCamera (int idx)
+	{
+		int i = 0;
+		foreach (var camera in cameras) {
+			if (i == idx)
+				camera.enabled = true;
+			else
+				camera.enabled = false;
+			i++;
+		}
+	}
+
+	void ChangeCameraRandomly() {
+		int idx = r.Next (cameras.Capacity - 1);
+
+		// Dont't use the same camera in succession 
+		while (lastIdx == idx)
+			idx = r.Next (cameras.Capacity - 1);
+		lastIdx = idx;
+		
+		SetCamera (idx);
 	}
 }
