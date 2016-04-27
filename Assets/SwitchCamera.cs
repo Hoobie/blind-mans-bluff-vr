@@ -20,7 +20,7 @@ public class SwitchCamera : MonoBehaviour
 			cameras.Add (tmp.GetComponent<Camera>());
 
 		// Change camera every CAMERA_CHANGE_TIMEOUT s
-		InvokeRepeating ("ChangeCameraRandomly", 0.0f, CAMERA_CHANGE_TIMEOUT);
+		//InvokeRepeating ("ChangeCameraRandomly", 0.0f, CAMERA_CHANGE_TIMEOUT);
 	}
 
 	// Update is called once per frame
