@@ -1,26 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class SwitchCamera : MonoBehaviour
 {
-	List<Camera> cameras;
-	private int playerCameraIdx;
+	List<Camera> cameras = new List<Camera>();
+	private int playerCameraIdx, lastIdx = -1;
 	private System.Random r;
+
+	private float CAMERA_CHANGE_TIMEOUT = 4f;
 
 	// Use this for initialization
 	void Start ()
 	{
-		cameras = new List<Camera>(Camera.allCameras);
-		cameras.RemoveAll (item => item.name == "PreRender" || item.name == "PostRender");
-
-		Camera playerCamera = cameras.Find (item => item.name == "PlayerCamera");
-		playerCameraIdx = cameras.IndexOf (playerCamera);
-
-		SetCamera (playerCameraIdx);
-
 		r = new System.Random (GetHashCode ());
-		InvokeRepeating ("ChangeCameraRandomly", 0.0f, 4f);
+		// Get all cameras
+		foreach (GameObject tmp in GameObject.FindGameObjectsWithTag ("MainCamera"))
+			cameras.Add (tmp.GetComponent<Camera>());
+
+		// Change camera every CAMERA_CHANGE_TIMEOUT s
+		InvokeRepeating ("ChangeCameraRandomly", 0.0f, CAMERA_CHANGE_TIMEOUT);
 	}
 
 	// Update is called once per frame
@@ -31,15 +31,14 @@ public class SwitchCamera : MonoBehaviour
 		//When we reach the end of the camera array, move back to the beginning or the array.
 		if ((Input.touchCount == 0 && Input.GetKeyDown (KeyCode.V)) ||
 		    (Input.touchCount == 1 && Input.GetTouch (0).phase == TouchPhase.Began)) {
-			int idx = r.Next (cameras.Capacity-1);
-			SetCamera (idx);
+			ChangeCameraRandomly ();
 		}
 	}
 
 	void SetCamera (int idx)
 	{
 		int i = 0;
-		foreach (Camera camera in cameras) {
+		foreach (var camera in cameras) {
 			if (i == idx)
 				camera.enabled = true;
 			else
@@ -50,6 +49,12 @@ public class SwitchCamera : MonoBehaviour
 
 	void ChangeCameraRandomly() {
 		int idx = r.Next (cameras.Capacity - 1);
+
+		// Dont't use the same camera in succession 
+		while (lastIdx == idx)
+			idx = r.Next (cameras.Capacity - 1);
+		lastIdx = idx;
+		
 		SetCamera (idx);
 	}
 }
