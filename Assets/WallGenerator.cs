@@ -15,7 +15,7 @@ public class WallGenerator : MonoBehaviour
 	private int smallerWallLength = 5;
 
 
-	private int wallCount = 30;
+	private int wallCount = 100;
 
 	void Start ()
 	{
