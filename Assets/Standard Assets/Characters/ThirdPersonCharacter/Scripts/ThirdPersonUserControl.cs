@@ -47,13 +47,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			// read inputs
 			float h, v;
-#if !MOBILE_INPUT
-			h = CrossPlatformInputManager.GetAxis("Horizontal");
-			v = CrossPlatformInputManager.GetAxis("Vertical");
-#else
-			h = -Input.acceleration.x;
-			v = -Input.acceleration.z;
-#endif
+			if (Application.isEditor) {
+				h = Input.GetAxis ("Horizontal");
+				v = Input.GetAxis ("Vertical");
+			} else {
+				h = -Input.acceleration.x;
+				v = -Input.acceleration.z;
+			}
+
 			bool crouch = Input.GetKey (KeyCode.C);
 
 			// calculate move direction to pass to character
@@ -65,12 +66,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				// we use world-relative directions in the case of no main camera
 				m_Move = v * Vector3.forward + h * Vector3.right;
 			}
-#if !MOBILE_INPUT
-			// walk speed multiplier
-			if (Input.GetKey (KeyCode.LeftShift))
-				m_Move *= 0.5f;
-#endif
 
+			// walk speed multiplier
+			if (Input.GetKey (KeyCode.LeftShift) && Application.isEditor)
+				m_Move *= 0.5f;
+			
 			// pass all parameters to the character control script
 			m_Character.Move (m_Move*3f, crouch, m_Jump);
 			m_Character.transform.Rotate(Input.acceleration.x*m_Cam.up*3f);
