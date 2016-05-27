@@ -3,9 +3,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class WallGenerator : MonoBehaviour
-{
-	private GameObject wall;
+public class WallGenerator : MonoBehaviour {
+
 	private int[,] borderWallsPositions = new int[4, 3] { { 0, 0, 25 }, { 25, 0, 0 }, { 50, 0, 25 }, { 25, 0, 50 } }; 
 	private int[,] borderWallsRotations = new int[4, 3] { { 0, 0, 0 }, { 0, 90, 0 }, { 0, 0, 0 }, { 0, 90, 0 } };
 
@@ -19,11 +18,13 @@ public class WallGenerator : MonoBehaviour
 
 	void Start ()
 	{
+		GameObject wall;
+
 		// Generate walls on the borders
 		for (int i = 0; i < 4; i++) {
 			wall = GameObject.CreatePrimitive (PrimitiveType.Cube);
 			wall.tag = "Wall";
-			Material material = Resources.Load ("Wall") as Material;
+			Material material = Resources.Load ("BorderWall") as Material;
 			wall.GetComponent<Renderer> ().material = material;
 			wall.transform.position = new Vector3 (borderWallsPositions[i,0],borderWallsPositions[i,1],borderWallsPositions[i,2]);
 			wall.transform.localScale = new Vector3 (1, wallHeight, wallLength);
