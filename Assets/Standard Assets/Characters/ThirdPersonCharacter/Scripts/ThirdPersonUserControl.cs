@@ -17,6 +17,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		private bool m_Jump;
 		// the world-relative desired move direction, calculated from the camForward and user input.
 
+		private AudioSource audioSource;
+
         
 		private void Start ()
 		{
@@ -31,6 +33,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			// get the third person character ( this should never be null due to require component )
 			m_Character = GetComponent<ThirdPersonCharacter> ();
+			audioSource = GetComponent<AudioSource> ();
+
 		}
 
 
@@ -70,7 +74,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			if (Input.GetKey (KeyCode.LeftShift))
 				m_Move *= 0.5f;
 #endif
-
+			if (v > 0.5) {
+				audioSource.Play ();
+				audioSource.Play (44100);
+			} else {
+				audioSource.Stop ();
+			}
 			// pass all parameters to the character control script
 			m_Character.Move (m_Move*3f, crouch, m_Jump);
 			m_Character.transform.Rotate(Input.acceleration.x*m_Cam.up*3f);
