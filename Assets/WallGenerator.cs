@@ -6,16 +6,16 @@ using System.Collections.Generic;
 public class WallGenerator : MonoBehaviour
 {
 	private GameObject wall;
-	private int[,] borderWallsPositions = new int[4, 3] { { 0, 0, 50 }, { 50, 0, 0 }, { 100, 0, 50 }, { 50, 0, 100 } }; 
+	private int[,] borderWallsPositions = new int[4, 3] { { 0, 0, 25 }, { 25, 0, 0 }, { 50, 0, 25 }, { 25, 0, 50 } }; 
 	private int[,] borderWallsRotations = new int[4, 3] { { 0, 0, 0 }, { 0, 90, 0 }, { 0, 0, 0 }, { 0, 90, 0 } };
 
 	private int wallHeight = 20;
-	private int wallLength = 100;
-	private int smallerWallHeight = 5;
+	private int wallLength = 50;
+	private int smallerWallHeight = 10;
 	private int smallerWallLength = 5;
 
 
-	private int wallCount = 100;
+	private int wallCount = 25;
 
 	void Start ()
 	{
@@ -45,8 +45,8 @@ public class WallGenerator : MonoBehaviour
 		System.Random r = new System.Random (GetHashCode());
 		bool spaceEmpty = true;
 		while (wallCount > 0) {
-			x = r.Next (100);
-			z = r.Next (100);
+			x = r.Next (50);
+			z = r.Next (50);
 			rotation = r.Next (180);
 
 			// Check if anybody is staying here
