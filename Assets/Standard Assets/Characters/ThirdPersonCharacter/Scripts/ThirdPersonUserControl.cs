@@ -74,18 +74,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// walk speed multiplier
 			if (Input.GetKey (KeyCode.LeftShift) && Application.isEditor)
 				m_Move *= 0.5f;
-
-			if (v > 0.5) {
-				audioSource.Play ();
-				audioSource.Play (44100);
-			} else {
-				audioSource.Stop ();
-			}
 			
+			if (v > 0.01f) {
+				audioSource.UnPause ();
+			} else {
+				audioSource.Pause ();
+			}
+
 			// pass all parameters to the character control script
 			m_Character.Move (m_Move*3f, crouch, m_Jump);
 			m_Character.transform.Rotate(Input.acceleration.x*m_Cam.up*3f);
 			m_Jump = false;
 		}
+
 	}
 }
