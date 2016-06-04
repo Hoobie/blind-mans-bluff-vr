@@ -23,4 +23,8 @@ public class MenuOptions : MonoBehaviour {
 	public void QuitApp() {
 		Application.Quit();
 	}
+
+	public void ResumeGame() {
+		Scenes.Load("Main", "Score", Scenes.getParam("Score"));
+	}
 }
