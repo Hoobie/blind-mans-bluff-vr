@@ -57,4 +57,12 @@ public class SwitchCamera : MonoBehaviour
 		
 		SetCamera (idx);
 	}
+
+	void OnEnable() {
+		Cardboard.SDK.OnTrigger += ChangeCameraRandomly;	
+	}
+
+	void OnDisable() {
+		Cardboard.SDK.OnTrigger -= ChangeCameraRandomly;
+	}
 }
