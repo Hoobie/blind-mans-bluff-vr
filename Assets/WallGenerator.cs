@@ -8,11 +8,10 @@ public class WallGenerator : MonoBehaviour {
 	private int[,] borderWallsPositions = new int[4, 3] { { 0, 0, 25 }, { 25, 0, 0 }, { 50, 0, 25 }, { 25, 0, 50 } }; 
 	private int[,] borderWallsRotations = new int[4, 3] { { 0, 0, 0 }, { 0, 90, 0 }, { 0, 0, 0 }, { 0, 90, 0 } };
 
-	private int wallHeight = 20;
-	private int wallLength = 50;
-	private int smallerWallHeight = 10;
-	private int smallerWallLength = 5;
-
+	private int borderWallHeight = 20;
+	private int borderWallLength = 50;
+	private int wallHeight = 10;
+	private int wallLength = 5;
 
 	private int wallCount = 25;
 
@@ -21,17 +20,71 @@ public class WallGenerator : MonoBehaviour {
 		GameObject wall;
 
 		// Generate walls on the borders
-		for (int i = 0; i < 4; i++) {
-			wall = GameObject.CreatePrimitive (PrimitiveType.Cube);
-			wall.tag = "Wall";
-			Material material = Resources.Load ("BorderWall") as Material;
-			wall.GetComponent<Renderer> ().material = material;
-			wall.transform.position = new Vector3 (borderWallsPositions[i,0],borderWallsPositions[i,1],borderWallsPositions[i,2]);
-			wall.transform.localScale = new Vector3 (1, wallHeight, wallLength);
-			wall.transform.rotation = Quaternion.Euler(borderWallsRotations [i,0],borderWallsRotations [i,1],borderWallsRotations [i,2]);
-		}
+		GenerateBorderWalls();
 
 		// Get player's and bots' posistions
+		List<Vector3> positions = GetPositions();
+
+		// Generate random walls inside
+		GenerateWallsInside(positions);
+	}
+
+	void GenerateBorderWalls ()
+	{
+		Material material;
+		Vector3 position, scale;
+		Quaternion rotation;
+
+		for (int i = 0; i < 4; i++) {
+			material = Resources.Load ("BorderWall") as Material;
+			position = new Vector3 (borderWallsPositions [i, 0], borderWallsPositions [i, 1], borderWallsPositions [i, 2]);
+			scale = new Vector3 (1, borderWallHeight, borderWallLength);
+			rotation = Quaternion.Euler (borderWallsRotations [i, 0], borderWallsRotations [i, 1], borderWallsRotations [i, 2]);
+			GenerateWall (material, position, scale, rotation);
+		}
+	}
+
+	void GenerateWallsInside (List<Vector3> objectsPositions)
+	{
+		int x, z, rotationDegree;
+		System.Random r = new System.Random (GetHashCode());
+		bool spaceEmpty = true;
+
+		Material material;
+		Vector3 position, scale;
+		Quaternion rotation;
+
+		while (wallCount > 0) {
+			x = r.Next (50);
+			z = r.Next (50);
+			rotationDegree = r.Next (180);
+
+			// Check if anybody is staying here
+			spaceEmpty = CheckIfSpaceEmpty(x, z, objectsPositions);
+
+			// Add a wall
+			if (spaceEmpty) {
+				wallCount--;
+				material = Resources.Load ("Wall") as Material;
+				position = new Vector3 (x, 0, z);
+				scale = new Vector3 (1, wallHeight, wallLength);
+				rotation = Quaternion.Euler(0, rotationDegree, 0);
+				GenerateWall(material, position, scale, rotation);
+			}
+		}
+	}
+
+	void GenerateWall(Material material, Vector3 position, Vector3 scale, Quaternion rotation) {
+		GameObject wall = GameObject.CreatePrimitive (PrimitiveType.Cube);
+		wall.tag = "Wall";
+		wall.GetComponent<Renderer> ().material = material;
+		wall.transform.position = position;
+		wall.transform.localScale = scale;
+		wall.transform.rotation = rotation;
+	}
+
+	List<Vector3> GetPositions ()
+	{
 		List<GameObject> players = new List<GameObject>();
 		players.Add(GameObject.FindWithTag("Player"));
 		players.AddRange (GameObject.FindGameObjectsWithTag ("Bot1"));
@@ -41,35 +94,16 @@ public class WallGenerator : MonoBehaviour {
 			positions.Add(player.transform.position);
 		}
 
-		// Generate random walls inside
-		int x, z, rotation;
-		System.Random r = new System.Random (GetHashCode());
-		bool spaceEmpty = true;
-		while (wallCount > 0) {
-			x = r.Next (50);
-			z = r.Next (50);
-			rotation = r.Next (180);
-
-			// Check if anybody is staying here
-			spaceEmpty = true;
-			foreach (Vector3 position in positions) {
-				if (position.x == x && position.z == z)
-					spaceEmpty = false;
-			}
-
-			// Add a wall
-			if (spaceEmpty) {
-				wallCount--;
-				wall = GameObject.CreatePrimitive (PrimitiveType.Cube);
-				wall.tag = "Wall";
-				Material material = Resources.Load ("Wall") as Material;
-				wall.GetComponent<Renderer> ().material = material;
-				wall.transform.position = new Vector3 (x, 0, z);
-				wall.transform.localScale = new Vector3 (1, smallerWallHeight, smallerWallLength);
-				wall.transform.rotation = Quaternion.Euler(0,rotation,0);
-			}
-		}
-
+		return positions;
 	}
 
+	bool CheckIfSpaceEmpty (int x, int z, List<Vector3> positions)
+	{
+		bool spaceEmpty = true;
+		foreach (Vector3 position in positions) {
+			if (position.x == x && position.z == z)
+				spaceEmpty = false;
+		}
+		return spaceEmpty;
+	}
 }
