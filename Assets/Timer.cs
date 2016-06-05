@@ -7,7 +7,7 @@ public class Timer : MonoBehaviour
 	public static long time;        // The player's time in milliseconds.
 
 	Text text;		
-	long baseTime = 30 * 1000;
+	long baseTime = 60 * 1000;
 
 	void Awake ()
 	{
