@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MenuOptions : MonoBehaviour {
 
@@ -25,6 +26,9 @@ public class MenuOptions : MonoBehaviour {
 	}
 
 	public void ResumeGame() {
-		Scenes.Load("Main", "Score", Scenes.getParam("Score"));
+		Dictionary<string, string> parameters = new Dictionary<string, string> ();
+		parameters.Add ("Score", Scenes.getParam ("Score"));
+		parameters.Add ("Time", Scenes.getParam ("Time"));
+		Scenes.Load("Main", parameters);
 	}
 }

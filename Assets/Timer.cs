@@ -6,7 +6,7 @@ public class Timer : MonoBehaviour
 {
 	public static long time;        // The player's time in milliseconds.
 
-	Text text;                      // Reference to the Text component.
+	Text text;		
 	long baseTime = 30 * 1000;
 
 	void Awake ()
@@ -14,8 +14,9 @@ public class Timer : MonoBehaviour
 		// Set up the reference.
 		text = GetComponent <Text> ();
 
-		// Reset the time.
-		time = baseTime;
+		// Set timer for the first time
+		if (time == 0)
+			time = baseTime;
 
 		// Start counting down
 		InvokeRepeating("DecreaseTimer", 0, 1);
@@ -32,11 +33,13 @@ public class Timer : MonoBehaviour
 		time -= 1000;
 
 		if (time < 1000) {
+			CancelInvoke ();
+			Timer.time = baseTime;
 			Scenes.Load ("FinishMenu", "Score", ScoreManager.score.ToString());
 		}
 	}
 
-	string ParseTime (long time)
+	public static string ParseTime (long time)
 	{
 		DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 		DateTime date= start.AddMilliseconds(time).ToLocalTime();
