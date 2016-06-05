@@ -15,6 +15,7 @@ public class MenuOptions : MonoBehaviour {
 	}
 
 	public void StartGame() {
+		ScoreManager.score = 0;
 		Application.LoadLevel ("Main");
 	}
 
