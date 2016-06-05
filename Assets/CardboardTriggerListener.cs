@@ -13,11 +13,15 @@ public class CardboardTriggerListener : MonoBehaviour
 	}
 
 	void TriggerPulled() {
+		/*
+		 * Start Pause scene
+		 * 
 		Dictionary<string, string> parameters = new Dictionary<string, string> ();
 		parameters.Add ("Score", ScoreManager.score.ToString());
 		parameters.Add ("Time", Timer.time.ToString());
 		Scenes.Load("Main", parameters);
 		Scenes.Load ("PauseMenu", parameters);
+		*/
 	}
 }
 
