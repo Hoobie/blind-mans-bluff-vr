@@ -9,18 +9,23 @@ public class SwitchCamera : MonoBehaviour
 	private int playerCameraIdx, lastIdx = -1;
 	private System.Random r;
 
-	private float CAMERA_CHANGE_TIMEOUT = 4f;
+	//private float CAMERA_CHANGE_TIMEOUT = 4f;
 
 	// Use this for initialization
 	void Start ()
 	{
 		r = new System.Random (GetHashCode ());
 		// Get all cameras
-		foreach (GameObject tmp in GameObject.FindGameObjectsWithTag ("MainCamera"))
-			cameras.Add (tmp.GetComponent<Camera>());
+		foreach (GameObject tmp in GameObject.FindGameObjectsWithTag ("MainCamera")) {
+			Camera camera = tmp.GetComponent<Camera> ();
+			if (camera.name == "PlayerCamera")
+				continue;
+			cameras.Add (camera);
+		}
 
 		// Change camera every CAMERA_CHANGE_TIMEOUT s
 		//InvokeRepeating ("ChangeCameraRandomly", 0.0f, CAMERA_CHANGE_TIMEOUT);
+		ChangeCameraRandomly ();
 	}
 
 	// Update is called once per frame
